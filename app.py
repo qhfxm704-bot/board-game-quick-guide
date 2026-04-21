@@ -20,5 +20,28 @@ def send():
 
     return redirect('/')
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    index = int(request.form['index'])
+    messages.pop(index)
+    return redirect('/')
+
+@app.route('/delete_all', methods=['post'])
+def delete_all():
+    messages.clear()
+    return redirect('/')
+
+@app.route('/delete_selected', methods=['post'])
+def delete_selected():
+    indexes = request.form.getlist('delete_indexes')
+    
+    indexes = [int(index) for index in indexes]
+    indexes.sort(reverse=True)
+
+    for index in indexes:
+        messages.pop(index)
+
+    return redirect('/')
+
 if __name__ == '__main__':
     app.run(debug=True)
