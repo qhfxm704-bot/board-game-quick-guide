@@ -34,13 +34,30 @@ def delete_all():
 @app.route('/delete_selected', methods=['post'])
 def delete_selected():
     indexes = request.form.getlist('delete_indexes')
-    
     indexes = [int(index) for index in indexes]
     indexes.sort(reverse=True)
 
     for index in indexes:
         messages.pop(index)
 
+    return redirect('/')
+
+@app.route('/edit/<int:index>')
+def edit(index):
+    return render_template('edit.html', index=index, item=messages[index])
+
+@app.route('/update', methods=['POST'])
+def update():
+    index = int(request.form['index'])
+    value = request.form.get('value')
+
+    if value.strip() == "":
+        return redirect(f'/edit/{index}')
+
+    if value == messages[index]:
+        return redirect('/')
+
+    messages[index] = value
     return redirect('/')
 
 if __name__ == '__main__':
